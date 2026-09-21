@@ -1,190 +1,1479 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mantasha — Data Engineer</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --purple: #534AB7; --purple-light: #EEEDFE; --purple-mid: #CECBF6; --purple-dark: #3C3489;
-    --teal: #0F6E56; --teal-light: #E1F5EE; --teal-mid: #5DCAA5;
-    --blue: #185FA5; --blue-light: #E6F1FB; --blue-mid: #85B7EB;
-    --amber-light: #FAEEDA; --amber: #633806; --amber-mid: #EF9F27;
-    --text: #1a1a1a; --text-muted: #6b7280; --border: #e5e7eb; --bg: #ffffff; --bg-secondary: #f9fafb;
-  }
-  body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; min-height: 100vh; }
-  a { color: var(--blue); text-decoration: none; }
-  .wrapper { max-width: 780px; margin: 0 auto; padding: 0 1.5rem; }
-  header { background: linear-gradient(135deg, #f8f7ff 0%, #eef9f5 100%); border-bottom: 1px solid var(--border); padding: 3rem 0 2rem; }
-  .hero-inner { display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; }
-  .avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--purple-mid); color: var(--purple-dark); font-size: 24px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .hero-name { font-size: 28px; font-weight: 600; }
-  .hero-role { font-size: 15px; color: var(--text-muted); margin-top: 4px; }
-  .hero-bio { font-size: 14px; color: var(--text-muted); margin-top: 12px; max-width: 520px; line-height: 1.7; }
-  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-  .badge { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; border: 1px solid; }
-  .badge-purple { background: var(--purple-light); color: var(--purple-dark); border-color: var(--purple-mid); }
-  .badge-teal { background: var(--teal-light); color: var(--teal); border-color: var(--teal-mid); }
-  .badge-blue { background: var(--blue-light); color: var(--blue); border-color: var(--blue-mid); }
-  .badge-amber { background: var(--amber-light); color: var(--amber); border-color: var(--amber-mid); }
-  nav { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid var(--border); }
-  .nav-inner { display: flex; overflow-x: auto; }
-  .nav-btn { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; padding: 1rem 1.25rem; border: none; border-bottom: 2px solid transparent; background: none; cursor: pointer; color: var(--text-muted); white-space: nowrap; }
-  .nav-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
-  .section { display: none; padding: 2rem 0; }
-  .section.active { display: block; }
-  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
-  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .card-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
-  .card-body { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
-  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-  .metric { background: var(--bg-secondary); border-radius: 10px; padding: 1.1rem; text-align: center; }
-  .metric-num { font-size: 26px; font-weight: 600; }
-  .metric-lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-  .cert-item { display: flex; align-items: flex-start; gap: 14px; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
-  .cert-item:last-child { border-bottom: none; }
-  .cert-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .cert-name { font-size: 14px; font-weight: 500; }
-  .cert-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-  .skill-card { background: var(--bg-secondary); border-radius: 10px; padding: 1rem; }
-  .skill-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 10px; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .skill-tag { font-size: 12px; padding: 3px 9px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); color: var(--text); }
-  .project-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
-  .project-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-  .project-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
-  .project-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
-  .contact-item { display: flex; align-items: center; gap: 14px; padding: 0.85rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-  .contact-item:last-child { border-bottom: none; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--purple); flex-shrink: 0; margin-top: 5px; }
-  .otw { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; border-radius: 20px; font-size: 12px; font-weight: 500; padding: 4px 12px; margin-top: 10px; }
-  .otw::before { content: '●'; font-size: 10px; color: #43a047; }
-  footer { text-align: center; padding: 2rem 0; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mantasha Khan | Data Engineer | AWS & Cloud Data</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --purple: #534ab7;
+      --purple-light: #eeedfe;
+      --purple-mid: #cecbf6;
+      --purple-dark: #3c3489;
+
+      --teal: #0f6e56;
+      --teal-light: #e1f5ee;
+      --teal-mid: #5dcaa5;
+
+      --blue: #185fa5;
+      --blue-light: #e6f1fb;
+      --blue-mid: #85b7eb;
+
+      --text: #1a1a1a;
+      --text-muted: #667085;
+      --border: #e5e7eb;
+      --bg: #ffffff;
+      --bg-secondary: #f8fafc;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.4rem;
+    }
+
+    /* HEADER */
+
+    header {
+      background: linear-gradient(
+        135deg,
+        #f8f7ff 0%,
+        #eef9f5 100%
+      );
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 0 2.7rem;
+    }
+
+    .hero {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: var(--purple-mid);
+      color: var(--purple-dark);
+      font-size: 28px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .name {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .role {
+      margin-top: 5px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .bio {
+      margin-top: 13px;
+      max-width: 720px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1px solid #a5d6a7;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status::before {
+      content: "●";
+      font-size: 9px;
+      color: #43a047;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+      border: 1px solid;
+    }
+
+    .purple {
+      background: var(--purple-light);
+      color: var(--purple-dark);
+      border-color: var(--purple-mid);
+    }
+
+    .teal {
+      background: var(--teal-light);
+      color: var(--teal);
+      border-color: var(--teal-mid);
+    }
+
+    .blue {
+      background: var(--blue-light);
+      color: var(--blue);
+      border-color: var(--blue-mid);
+    }
+
+    /* BUTTONS */
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+    }
+
+    .button-primary {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: white;
+    }
+
+    .button:hover {
+      opacity: 0.9;
+    }
+
+    /* NAVIGATION */
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      overflow-x: auto;
+    }
+
+    .nav-button {
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 1rem 1.1rem;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .nav-button.active {
+      color: var(--purple);
+      border-bottom-color: var(--purple);
+    }
+
+    /* SECTIONS */
+
+    .section {
+      display: none;
+      padding: 2rem 0;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* CARDS */
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* METRICS */
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 1.1rem;
+      text-align: center;
+    }
+
+    .metric-number {
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* EXPERIENCE */
+
+    .experience-header {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .timeline-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* SKILLS */
+
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(190px, 1fr)
+      );
+      gap: 12px;
+    }
+
+    .skill-card {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .skill-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      font-size: 12px;
+      padding: 4px 9px;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    /* PROJECTS */
+
+    .project {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.3rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .project-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 5px 0 10px;
+    }
+
+    .project-description {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* CERTIFICATIONS */
+
+    .certification {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .certification:last-child {
+      border-bottom: none;
+    }
+
+    .cert-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--purple-light);
+    }
+
+    .cert-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .cert-info {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* CONTACT */
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .contact-row:last-child {
+      border-bottom: none;
+    }
+
+    .contact-icon {
+      font-size: 20px;
+    }
+
+    /* HIGHLIGHT */
+
+    .highlight {
+      border-left: 3px solid var(--teal-mid);
+      background: var(--bg-secondary);
+    }
+
+    /* FOOTER */
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 650px) {
+      .hero {
+        flex-direction: column;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .name {
+        font-size: 27px;
+      }
+
+      .wrapper {
+        padding: 0 1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
+<!-- ================= HEADER ================= -->
+
 <header>
   <div class="wrapper">
-    <div class="hero-inner">
+
+    <div class="hero">
+
       <div class="avatar">M</div>
-      <div style="flex:1; min-width:200px;">
-        <div class="hero-name">Mantasha</div>
-        <div class="hero-role">Data Engineer · Cloud & Big Data Specialist · Gurugram, India</div>
-        <div class="otw">Open to work</div>
-        <div class="hero-bio">Results-driven data engineer with 1.5+ years designing scalable cloud pipelines on AWS & Azure. Dual Databricks certified. Former Accenture engineer on the BP project.</div>
-        <div class="badges">
-          <span class="badge badge-purple">🏆 Databricks Professional</span>
-          <span class="badge badge-purple">🎖 Databricks Associate</span>
-          <span class="badge badge-blue">☁️ AWS</span>
-          <span class="badge badge-blue">🔷 Azure DP-900</span>
-          <span class="badge badge-teal">⚡ PySpark</span>
-          <span class="badge badge-amber">⭐ HackerRank 5-Star</span>
+
+      <div>
+
+        <div class="name">
+          Mantasha Khan
         </div>
+
+        <div class="role">
+          Data Engineer · AWS & Azure · PySpark · SQL · Databricks
+        </div>
+
+        <div class="status">
+          Open to Work
+        </div>
+
+        <div class="bio">
+          Data Engineer with 1.5+ years of enterprise experience at
+          Accenture on the BP project, building scalable ETL/ELT
+          pipelines and cloud data solutions across AWS and Azure.
+          Experienced in requirements gathering, data validation,
+          data modeling, technical documentation, and large-scale
+          data processing.
+        </div>
+
+        <div class="badges">
+
+          <span class="badge purple">
+            🏆 Databricks Professional
+          </span>
+
+          <span class="badge purple">
+            🎖 Databricks Associate
+          </span>
+
+          <span class="badge blue">
+            ☁️ AWS
+          </span>
+
+          <span class="badge blue">
+            🔷 Azure DP-900
+          </span>
+
+          <span class="badge teal">
+            ⚡ PySpark
+          </span>
+
+          <span class="badge teal">
+            🗄️ SQL
+          </span>
+
+        </div>
+
+        <div class="buttons">
+
+          <a
+            class="button button-primary"
+            href="#contact"
+            onclick="showSection('contact', 5)"
+          >
+            Contact Me
+          </a>
+
+          <a
+            class="button"
+            href="https://www.linkedin.com/in/mantasha-92a94a258"
+            target="_blank"
+          >
+            LinkedIn
+          </a>
+
+          <a
+            class="button"
+            href="https://github.com/mantasha-engineer"
+            target="_blank"
+          >
+            GitHub
+          </a>
+
+        </div>
+
       </div>
+
     </div>
+
   </div>
 </header>
+
+
+<!-- ================= NAVIGATION ================= -->
+
 <nav>
+
   <div class="wrapper">
+
     <div class="nav-inner">
-      <button class="nav-btn active" onclick="show('about',this)">About</button>
-      <button class="nav-btn" onclick="show('experience',this)">Experience</button>
-      <button class="nav-btn" onclick="show('projects',this)">Projects</button>
-      <button class="nav-btn" onclick="show('skills',this)">Skills</button>
-      <button class="nav-btn" onclick="show('contact',this)">Contact</button>
+
+      <button
+        class="nav-button active"
+        onclick="showSection('about',0)"
+      >
+        About
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showSection('experience',1)"
+      >
+        Experience
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showSection('projects',2)"
+      >
+        Projects
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showSection('skills',3)"
+      >
+        Skills
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showSection('certifications',4)"
+      >
+        Certifications
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showSection('contact',5)"
+      >
+        Contact
+      </button>
+
     </div>
+
   </div>
+
 </nav>
+
+
 <main class="wrapper">
-  <div id="about" class="section active">
-    <div class="metrics">
-      <div class="metric"><div class="metric-num" style="color:var(--purple);">1.5+</div><div class="metric-lbl">Years experience</div></div>
-      <div class="metric"><div class="metric-num" style="color:var(--teal);">5</div><div class="metric-lbl">Certifications</div></div>
-      <div class="metric"><div class="metric-num" style="color:var(--blue);">5</div><div class="metric-lbl">Projects built</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title">🎓 Certifications</div>
-      <div class="cert-item"><div class="cert-icon" style="background:var(--purple-light);">🏆</div><div><div class="cert-name">Databricks Certified Data Engineer Professional</div><div class="cert-sub">Highest-level Databricks certification · 2026</div></div></div>
-      <div class="cert-item"><div class="cert-icon" style="background:var(--purple-light);">🎖</div><div><div class="cert-name">Databricks Certified Data Engineer Associate</div><div class="cert-sub">Databricks · 2024</div></div></div>
-      <div class="cert-item"><div class="cert-icon" style="background:var(--blue-light);">🔷</div><div><div class="cert-name">Microsoft Azure Data Fundamentals (DP-900)</div><div class="cert-sub">Microsoft · 2024</div></div></div>
-      <div class="cert-item"><div class="cert-icon" style="background:#f0fdf4;">⭐</div><div><div class="cert-name">Python & SQL — 5-Star Rating</div><div class="cert-sub">HackerRank</div></div></div>
-      <div class="cert-item"><div class="cert-icon" style="background:var(--amber-light);">🌐</div><div><div class="cert-name">Cisco Networking Certifications</div><div class="cert-sub">Cisco</div></div></div>
-    </div>
-    <div class="card" style="background:var(--bg-secondary);">
-      <div class="card-title">🎓 Education</div>
-      <div class="card-body"><strong>B.Tech in Information Technology</strong> — ABES Engineering College, 2024<br/>12th CBSE · 10th CBSE</div>
-    </div>
-  </div>
-  <div id="experience" class="section">
-    <div class="card">
-      <div style="display:flex;gap:14px;align-items:flex-start;">
-        <div class="dot"></div>
-        <div style="flex:1;">
-          <div class="card-title">Data Engineer — Accenture (BP Project)</div>
-          <div class="card-sub">July 2024 – February 2026 · 1 year 8 months · Gurugram, India</div>
-          <div class="card-body">
-            <div>· Designed and optimized AWS-based data pipelines at enterprise scale.</div>
-            <div>· Built end-to-end ETL pipelines using AWS Glue, Athena, Lambda, S3, and Azure Data Factory.</div>
-            <div>· Implemented data validation frameworks and automated workflows.</div>
-            <div>· Developed dashboards and analytical reports; tracked milestones in Jira.</div>
-            <div>· Collaborated with business analysts, architects, and QA engineers.</div>
-          </div>
-          <div class="badges" style="margin-top:14px;">
-            <span class="badge badge-blue">AWS Glue</span><span class="badge badge-blue">Athena</span><span class="badge badge-blue">Lambda</span><span class="badge badge-blue">S3</span><span class="badge badge-teal">Azure ADF</span><span class="badge badge-purple">PySpark</span>
-          </div>
-        </div>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section
+  id="about"
+  class="section active"
+>
+
+  <div class="metrics">
+
+    <div class="metric">
+
+      <div
+        class="metric-number"
+        style="color:var(--purple);"
+      >
+        1.5+
       </div>
+
+      <div class="metric-label">
+        Years Enterprise Experience
+      </div>
+
     </div>
-    <div class="card" style="border-left:3px solid var(--teal-mid);">
-      <div class="card-title">📈 Currently</div>
-      <div class="card-body">Achieved Databricks Professional certification (2026) · Preparing for DP-700 · Building cloud projects focused on pipeline optimization.</div>
+
+
+    <div class="metric">
+
+      <div
+        class="metric-number"
+        style="color:var(--teal);"
+      >
+        6
+      </div>
+
+      <div class="metric-label">
+        Certifications & Credentials
+      </div>
+
     </div>
+
+
+    <div class="metric">
+
+      <div
+        class="metric-number"
+        style="color:var(--blue);"
+      >
+        2
+      </div>
+
+      <div class="metric-label">
+        Cloud Platforms
+      </div>
+
+    </div>
+
   </div>
-  <div id="projects" class="section">
-    <div class="project-card"><div class="project-title">⚡ Power Consumption Analysis</div><div class="project-sub">Data Engineering · Analytics Dashboard · Python · SQL</div><div class="project-desc">End-to-end data pipeline and analytics dashboard for energy usage insights.</div><div class="badges" style="margin-top:12px;"><span class="badge badge-teal">Pipeline</span><span class="badge badge-blue">Analytics</span><span class="badge badge-purple">Dashboard</span></div></div>
-    <div class="project-card"><div class="project-title">✋ Hand Gesture Recognition</div><div class="project-sub">Machine Learning · Computer Vision · Python</div><div class="project-desc">ML-based real-time hand gesture classifier using computer vision techniques.</div><div class="badges" style="margin-top:12px;"><span class="badge badge-teal">ML</span><span class="badge badge-blue">Computer Vision</span><span class="badge badge-purple">Python</span></div></div>
-    <div class="project-card"><div class="project-title">🔍 Rumor Detection System</div><div class="project-sub">NLP · Misinformation Classification · Python</div><div class="project-desc">NLP model to identify and classify misinformation in social media content.</div><div class="badges" style="margin-top:12px;"><span class="badge badge-amber">NLP</span><span class="badge badge-purple">Python</span><span class="badge badge-teal">ML</span></div></div>
-    <div class="project-card"><div class="project-title">🏥 Hospital Management System</div><div class="project-sub">Full Stack · Database Design · SQL</div><div class="project-desc">Full-stack database-driven application for patient and resource management.</div><div class="badges" style="margin-top:12px;"><span class="badge badge-blue">SQL</span><span class="badge badge-teal">Database design</span><span class="badge badge-purple">Full stack</span></div></div>
+
+
+  <div class="card">
+
+    <div class="card-title">
+      👋 About Me
+    </div>
+
+    <div class="card-body">
+
+      I am a Data Engineer focused on building reliable,
+      scalable data pipelines and cloud-based data solutions.
+
+      At Accenture, I worked on the BP project using AWS
+      and Azure technologies, Python, SQL, PySpark,
+      Databricks and Apache Spark.
+
+      My experience includes requirements gathering,
+      ETL/ELT design, data validation, schema optimization,
+      data modeling, documentation and collaboration with
+      engineering, architecture and QA teams.
+
+    </div>
+
   </div>
-  <div id="skills" class="section">
-    <div class="skill-grid">
-      <div class="skill-card"><div class="skill-label">Languages</div><div class="skill-tags"><span class="skill-tag">Python</span><span class="skill-tag">SQL</span><span class="skill-tag">PySpark</span><span class="skill-tag">C++</span></div></div>
-      <div class="skill-card"><div class="skill-label">AWS</div><div class="skill-tags"><span class="skill-tag">Glue</span><span class="skill-tag">Athena</span><span class="skill-tag">Lambda</span><span class="skill-tag">S3</span><span class="skill-tag">DynamoDB</span></div></div>
-      <div class="skill-card"><div class="skill-label">Azure</div><div class="skill-tags"><span class="skill-tag">ADF</span><span class="skill-tag">Data Fundamentals</span></div></div>
-      <div class="skill-card"><div class="skill-label">Big Data & ETL</div><div class="skill-tags"><span class="skill-tag">Databricks</span><span class="skill-tag">Apache Spark</span><span class="skill-tag">ETL design</span></div></div>
-      <div class="skill-card"><div class="skill-label">Databases</div><div class="skill-tags"><span class="skill-tag">MySQL</span><span class="skill-tag">DynamoDB</span><span class="skill-tag">Athena</span></div></div>
-      <div class="skill-card"><div class="skill-label">Tools</div><div class="skill-tags"><span class="skill-tag">Git</span><span class="skill-tag">Jira</span><span class="skill-tag">Excel</span></div></div>
+
+
+  <div class="card">
+
+    <div class="card-title">
+      🎓 Education
     </div>
-    <div class="card" style="margin-top:1.25rem; border-left:3px solid var(--teal-mid);">
-      <div class="card-title">📚 Currently learning</div>
-      <div class="card-body">Microsoft Fabric Analytics Engineer (DP-700) · Pipeline optimization · SQL performance tuning</div>
+
+    <div class="card-body">
+
+      <strong>
+        B.Tech in Information Technology
+      </strong>
+
+      — ABES Engineering College, 2024
+
+      <br />
+
+      12th — CBSE (2020)
+
+      ·
+
+      10th — CBSE (2018)
+
     </div>
+
   </div>
-  <div id="contact" class="section">
-    <div class="card">
-      <div class="contact-item"><span style="font-size:20px;">📞</span><span>+91 99584 96132</span></div>
-      <div class="contact-item"><span style="font-size:20px;">✉️</span><a href="mailto:mantasha1415@gmail.com">mantasha1415@gmail.com</a></div>
-      <div class="contact-item"><span style="font-size:20px;">💼</span><a href="https://linkedin.com/in/mantasha-92a94a258" target="_blank">linkedin.com/in/mantasha-92a94a258</a></div>
-      <div class="contact-item"><span style="font-size:20px;">📍</span><span>Gurugram, Haryana, India</span></div>
+
+</section>
+
+
+<!-- ================= EXPERIENCE ================= -->
+
+<section
+  id="experience"
+  class="section"
+>
+
+  <div class="card">
+
+    <div class="experience-header">
+
+      <div class="timeline-dot"></div>
+
+      <div>
+
+        <div class="card-title">
+          Data Engineer — Accenture | BP Project
+        </div>
+
+        <div class="card-sub">
+          July 2024 – February 2026 · 1.5+ years
+        </div>
+
+
+        <div class="card-body">
+
+          <ul>
+
+            <li>
+              Gathered business and functional requirements
+              from cross-functional stakeholders and translated
+              them into scalable, adaptable ETL/ELT architectures.
+            </li>
+
+            <li>
+              Designed, implemented and supported real-time
+              and batch data ingestion using AWS Glue,
+              Lambda and S3 for workloads processing
+              millions of records daily.
+            </li>
+
+            <li>
+              Worked across AWS and Azure environments,
+              including Glue, Athena, Lambda, S3,
+              DynamoDB, EMR and Azure Data Factory.
+            </li>
+
+            <li>
+              Developed PySpark and SparkSQL transformations
+              in Databricks on Apache Spark to process,
+              curate and integrate large datasets.
+            </li>
+
+            <li>
+              Implemented automated data validation frameworks
+              and quality checks to improve production
+              data reliability.
+            </li>
+
+            <li>
+              Applied schema optimization, data modeling
+              and data curation practices to support scalable
+              and high-performance data solutions.
+            </li>
+
+            <li>
+              Collaborated with engineers, architects and
+              QA teams on data-system design, implementation,
+              issue resolution and technical documentation.
+            </li>
+
+          </ul>
+
+        </div>
+
+
+        <div class="badges">
+
+          <span class="badge blue">AWS Glue</span>
+          <span class="badge blue">Lambda</span>
+          <span class="badge blue">S3</span>
+          <span class="badge blue">Athena</span>
+          <span class="badge blue">DynamoDB</span>
+          <span class="badge blue">EMR</span>
+
+          <span class="badge teal">
+            Azure Data Factory
+          </span>
+
+          <span class="badge purple">
+            Databricks
+          </span>
+
+          <span class="badge purple">
+            PySpark
+          </span>
+
+        </div>
+
+      </div>
+
     </div>
-    <div class="card" style="background:var(--purple-light); border-color:var(--purple-mid);">
-      <div class="card-title" style="color:var(--purple-dark);">💬 Let's connect</div>
-      <div class="card-body" style="color:var(--purple-dark);">I'm actively looking for Data Engineer, Analytics Engineer, and Cloud Engineer roles. Reach out — I'd love to hear from you.</div>
-    </div>
+
   </div>
+
+
+  <div class="card highlight">
+
+    <div class="card-title">
+      📚 Continued Learning | Feb 2026 – Present
+    </div>
+
+    <div class="card-body">
+
+      <ul>
+
+        <li>
+          Earned Databricks Certified Data Engineer
+          Professional certification, strengthening advanced
+          knowledge of Apache Spark, Delta Lake and scalable
+          data pipeline architecture.
+        </li>
+
+        <li>
+          Building cloud projects using AWS EMR and the
+          Hadoop ecosystem, with focus on SQL performance
+          tuning, big-data optimization and production-grade
+          data processing.
+        </li>
+
+        <li>
+          Developing end-to-end ingestion and warehousing
+          projects using HiveQL, SparkSQL and AWS Glue.
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= PROJECTS ================= -->
+
+<section
+  id="projects"
+  class="section"
+>
+
+  <div class="project">
+
+    <div class="project-title">
+      ⚡ Power Consumption Analysis
+    </div>
+
+    <div class="project-subtitle">
+      Data Engineering · Analytics Dashboard · Python · SQL
+    </div>
+
+    <div class="project-description">
+
+      End-to-end data ingestion pipeline and analytics
+      dashboard for energy-usage insights, applying
+      ETL/ELT practices with Python and SQL on structured
+      datasets.
+
+    </div>
+
+    <div class="badges">
+
+      <span class="badge teal">
+        ETL/ELT
+      </span>
+
+      <span class="badge blue">
+        Python
+      </span>
+
+      <span class="badge purple">
+        SQL
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div class="project">
+
+    <div class="project-title">
+      🏥 Hospital Management System
+    </div>
+
+    <div class="project-subtitle">
+      Database Design · SQL · Data Modeling
+    </div>
+
+    <div class="project-description">
+
+      Database-driven application demonstrating advanced
+      SQL, data modeling and schema design for patient
+      and resource management.
+
+    </div>
+
+    <div class="badges">
+
+      <span class="badge blue">
+        SQL
+      </span>
+
+      <span class="badge teal">
+        Data Modeling
+      </span>
+
+      <span class="badge purple">
+        Schema Design
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= SKILLS ================= -->
+
+<section
+  id="skills"
+  class="section"
+>
+
+  <div class="skill-grid">
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Programming
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">PySpark</span>
+        <span class="skill-tag">KornShell</span>
+        <span class="skill-tag">C++</span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Query Languages
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">HiveQL</span>
+        <span class="skill-tag">SparkSQL</span>
+        <span class="skill-tag">DDL</span>
+        <span class="skill-tag">PL/SQL</span>
+        <span class="skill-tag">Scala Basic</span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        AWS
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">Glue</span>
+        <span class="skill-tag">Athena</span>
+        <span class="skill-tag">Lambda</span>
+        <span class="skill-tag">S3</span>
+        <span class="skill-tag">DynamoDB</span>
+        <span class="skill-tag">EMR</span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Azure
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">
+          Azure Data Factory
+        </span>
+
+        <span class="skill-tag">
+          Azure Data Fundamentals
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Big Data
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">
+          Apache Spark
+        </span>
+
+        <span class="skill-tag">
+          Hadoop
+        </span>
+
+        <span class="skill-tag">
+          Hive
+        </span>
+
+        <span class="skill-tag">
+          Databricks
+        </span>
+
+        <span class="skill-tag">
+          Delta Lake
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Data Engineering
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">
+          ETL / ELT
+        </span>
+
+        <span class="skill-tag">
+          Data Validation
+        </span>
+
+        <span class="skill-tag">
+          Data Quality
+        </span>
+
+        <span class="skill-tag">
+          Data Modeling
+        </span>
+
+        <span class="skill-tag">
+          Data Warehousing
+        </span>
+
+        <span class="skill-tag">
+          Data Lake Architecture
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Databases
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">DynamoDB</span>
+        <span class="skill-tag">Athena</span>
+
+      </div>
+
+    </div>
+
+
+    <div class="skill-card">
+
+      <div class="skill-title">
+        Tools
+      </div>
+
+      <div class="skill-tags">
+
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">Jira</span>
+        <span class="skill-tag">Excel</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="card highlight"
+    style="margin-top:1.25rem;"
+  >
+
+    <div class="card-title">
+      🎯 Current Focus
+    </div>
+
+    <div class="card-body">
+
+      Cloud data engineering · Pipeline optimization ·
+      SQL performance tuning · Big-data processing ·
+      Microsoft Fabric Analytics Engineer (DP-700)
+      preparation
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CERTIFICATIONS ================= -->
+
+<section
+  id="certifications"
+  class="section"
+>
+
+  <div class="card">
+
+
+    <div class="certification">
+
+      <div class="cert-icon">
+        🏆
+      </div>
+
+      <div>
+
+        <div class="cert-name">
+          Databricks Certified Data Engineer Professional
+        </div>
+
+        <div class="cert-info">
+          Databricks · 2026
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="certification">
+
+      <div class="cert-icon">
+        🎖
+      </div>
+
+      <div>
+
+        <div class="cert-name">
+          Databricks Certified Data Engineer Associate
+        </div>
+
+        <div class="cert-info">
+          Databricks
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="certification">
+
+      <div class="cert-icon">
+        🔷
+      </div>
+
+      <div>
+
+        <div class="cert-name">
+          Microsoft Azure Data Fundamentals (DP-900)
+        </div>
+
+        <div class="cert-info">
+          Microsoft
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="certification">
+
+      <div class="cert-icon">
+        🎓
+      </div>
+
+      <div>
+
+        <div class="cert-name">
+          IBM Data Engineering Professional Certificate
+        </div>
+
+        <div class="cert-info">
+          Coursera · 16 courses · Aug 2026
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="certification">
+
+      <div class="cert-icon">
+        ⭐
+      </div>
+
+      <div>
+
+        <div class="cert-name">
+          Python & SQL — HackerRank
+        </div>
+
+        <div class="cert-info">
+          5-Star Problem Solving
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="certification">
+
+      <div class="cert-icon">
+        🌐
+      </div>
+
+      <div>
+
+        <div class="cert-name">
+          Cisco Networking Certifications
+        </div>
+
+        <div class="cert-info">
+          Cisco
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CONTACT ================= -->
+
+<section
+  id="contact"
+  class="section"
+>
+
+  <div class="card">
+
+    <div class="contact-row">
+
+      <div class="contact-icon">
+        ✉️
+      </div>
+
+      <a href="mailto:mantasha1415@gmail.com">
+        mantasha1415@gmail.com
+      </a>
+
+    </div>
+
+
+    <div class="contact-row">
+
+      <div class="contact-icon">
+        💼
+      </div>
+
+      <a
+        href="https://www.linkedin.com/in/mantasha-92a94a258"
+        target="_blank"
+      >
+        LinkedIn Profile
+      </a>
+
+    </div>
+
+
+    <div class="contact-row">
+
+      <div class="contact-icon">
+        💻
+      </div>
+
+      <a
+        href="https://github.com/mantasha-engineer"
+        target="_blank"
+      >
+        GitHub Profile
+      </a>
+
+    </div>
+
+
+    <div class="contact-row">
+
+      <div class="contact-icon">
+        📍
+      </div>
+
+      <span>
+        Delhi NCR, India
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="card"
+    style="
+      background:var(--purple-light);
+      border-color:var(--purple-mid);
+    "
+  >
+
+    <div
+      class="card-title"
+      style="color:var(--purple-dark);"
+    >
+      💬 Let's Connect
+    </div>
+
+    <div
+      class="card-body"
+      style="color:var(--purple-dark);"
+    >
+      I'm actively looking for Data Engineer and
+      Cloud Data Engineer opportunities. Feel free
+      to connect with me on LinkedIn.
+    </div>
+
+  </div>
+
+</section>
+
 </main>
-<footer><div class="wrapper">Built with passion · Mantasha · Data Engineer · Gurugram, India</div></footer>
+
+
+<footer>
+
+  <div class="wrapper">
+    Built with passion · Mantasha Khan · Data Engineer · Delhi NCR, India
+  </div>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
 <script>
-function show(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+function showSection(id, index) {
+
+  const sections =
+    document.querySelectorAll(".section");
+
+  const buttons =
+    document.querySelectorAll(".nav-button");
+
+  sections.forEach(section => {
+    section.classList.remove("active");
+  });
+
+  buttons.forEach(button => {
+    button.classList.remove("active");
+  });
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+  buttons[index].classList.add("active");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
+
 </script>
+
 </body>
 </html>
